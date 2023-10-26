@@ -19,3 +19,4 @@ gmm/04_imgs
 gmm/NYCU_video2img
 gmm/test_Trim_imgs
 YOLOX_origin/
+!YOLOX/assets/*.png
