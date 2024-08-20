@@ -1,3 +1,59 @@
+# Disentanglement-Based Multi-Vehicle Detection and Tracking for Gate-Free Parking Lot Management
+
+This codebase contains the implementation of:
+
+**[Disentanglement-Based Multi-Vehicle Detection and Tracking for Gate-Free Parking Lot Management](https://ieeexplore.ieee.org/document/10043379) (ICCE2023)**
+
+## Altob&ACM Dataset
+In cooperation with Altob, we propose our own dataset in this paper.
+
+- **[Altob&ACM](https://drive.google.com/drive/folders/1QTrd_xDrLISX65myavIEDsmgeUsC3mzM?usp=sharing)**
+
+![altob&acm](./doc/altob&acm.png)
+
+- **[NYCU cam](https://drive.google.com/drive/folders/1uiysffXs0wamqfc8hmR9ZsGEb38e5xkt?usp=sharing)**
+
+![NYCU cam](./doc/NYCU_cam.png)
+
+## Framework Overview
+llustration of our tracker. The occluded cars that are originally parked in the spots remain in the tracklets in the
+separated background model, hence we are able to recover those occluded objects and avoid ID switching cases dramatically.
+![architecture](./doc/architecture.png)
+
+## Abstract 
+Multiple object tracking (MOT) techniques can help to build gate-free parking lot management systems purely under vision-based surveillance. However, conventional MOT methods tend to suffer long-term occlusion and cause ID switch problems, making applying them directly in crowded and complex parking lot scenes challenging. Hence, we present a novel disentanglement-based architecture for multi-object detection and tracking to relieve the ID switch issues. First, a background image is disentangled from the original input frame; then, MOT is applied separately to the background and original frames. Next, we design a fusion strategy that can solve the ID switch problem by keeping track of the occluded vehicles while considering complex interactions among vehicles. In addition, we provide a dataset with annotations in severe occlusions parking lot scenes that suits the application. The experiment results show our superiority over the state-of-the-art trackers quantitatively and qualitatively.
+## Execution Step
+```
+# Using GMM to generate background video
+python GMM.py --video ${VID_FILE} --output ${OUTPUT_PATH}
+
+# Tracking with BG and FG videos
+python demo1.py --model ${CKPT_FILE} --bg_source ${GMM_VID_FILE} --fg_source ${VID_FILE} --output ${OUTPUT_PATH}
+
+# Tracking NYCU dataset
+python demo_NYCU.py --model ${CKPT_FILE} --output ${OUTPUT_PATH} --camera ${CAM_INDEX}
+```
+
+- `fg_source`: Original video.
+- `bg_source`: The output video of GMM.
+- CKPT_FILE: Default is `./yolox_x.pth`
+- CAM_INDEX: `0` or `1`. Two different angle webcams of NYCU parking lot.
+
+
+## Experiments Results
+
+### Main Results
+Quantitative comparison with the state-of-the-art MOT methods in terms of different metrics. Here, the notation
+(↑) indicates the higher is better. In contrast, the notation (↓) means the lower is better.
+![main results](./doc/main_results.png)
+
+### Comparision with SOTA
+Comparison of our method with DeepSORT, ByteTrack, and StrongSORT on the 01 video in Altob&ACM dataset (i.e.,
+Video 1 and 3). We show the car tracking IDs (the white numbers) before and after long-term occlusion. Our method robustly
+tracks cars with consistent IDs, while the other methods produce severe ID switch results.
+![comparision](./doc/comparision.png)
+
+<!--
 # YOLOX_deepsort_tracker
 
 <div align="center">
@@ -118,3 +174,4 @@ You can also get more information like *raw_img/boudingbox/score/class_id* from 
 python demo.py --path=test.mp4
 ```
 
+-->
